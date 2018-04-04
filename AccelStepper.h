@@ -158,6 +158,16 @@ public:
     /// anticlockwise from the current position.
     void    move(long relative);
 
+    void    setResolution(long stepsPerRevolution, float driverMicroStepping);
+
+    long    angleToStep(float angle);
+
+    long    mmToStep(float distance, float rdistance);
+
+    long    cmToStep(float distance, float rdistance);
+
+    long    inchToStep(float distance, float rdistance);
+
     /// Poll the motor and step it if a step is due, implementing
     /// accelerations and decelerations to achive the ratget position. You must call this as
     /// fequently as possible, but at least once per minimum step interval,
@@ -306,6 +316,8 @@ private:
 
     /// The current absolution position in steps.
     long           _currentPos;    // Steps
+
+    long           _resolution; // Resolution
 
     /// The target position in steps. The AccelStepper library will move the
     /// motor from teh _currentPos to the _targetPos, taking into account the

@@ -16,6 +16,31 @@ void AccelStepper::move(long relative)
     moveTo(_currentPos + relative);
 }
 
+void AccelStepper::setResolution(long stepsPerRevolution, float driverMicroStepping)
+{
+    _resolution = stepsPerRevolution * (1/driverMicroStepping);
+}
+
+long AccelStepper::angleToStep(float angle)
+{
+    return angle/(360/_resolution);
+}
+
+long AccelStepper::mmToStep(float distance, float rdistance)
+{
+    return distance/(360/(rdistance/_resolution));
+}
+
+long AccelStepper::cmToStep(float distance, float rdistance) 
+{
+    return (distance * 10)/(360/(rdistance/_resolution));
+}
+
+long AccelStepper::inchToStep(float distance, float rdistance)
+{
+    return (distance * 25.4)/(360/(rdistance/_resolution));
+}
+
 // Implements steps according to the current speed
 // You must call this at least once per step
 // returns true if a step occurred
@@ -145,6 +170,7 @@ AccelStepper::AccelStepper(uint8_t pins, uint8_t pin1, uint8_t pin2, uint8_t pin
     _pin2 = pin2;
     _pin3 = pin3;
     _pin4 = pin4;
+    _resolution = 200;
     enableOutputs();
 }
 
@@ -164,6 +190,7 @@ AccelStepper::AccelStepper(void (*forward)(), void (*backward)())
     _pin4 = 0;
     _forward = forward;
     _backward = backward;
+    _resolution = 200;
 }
 
 void AccelStepper::setMaxSpeed(float speed)
